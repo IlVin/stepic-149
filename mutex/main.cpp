@@ -55,8 +55,25 @@ void * wait_rwlock_pthread(void *arg) {
     return NULL;
 }
 
+pthread_mutex_t cond_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
+void * wait_cond_pthread(void *arg) {
+    std::cout << "wait_cond_pthread: lock" << std::endl;
+    pthread_cond_wait(&cond, &cond_mutex);
+    std::cout << "wait_cond_pthread: unlock" << std::endl;
+    return NULL;
+}
+
+pthread_barrier_t bp;
+void * wait_barrier_pthread(void *arg) {
+    std::cout << "wait_barrier_pthread: lock" << std::endl;
+    pthread_barrier_wait(&bp);
+    std::cout << "wait_barrier_pthread: unlock" << std::endl;
+    return NULL;
+}
+
 typedef void * (*wait_fn_thread)(void *);
-#define THCNT 4
+#define THCNT 6
 
 int main() {
 
@@ -68,6 +85,7 @@ int main() {
 
     // Init mutexes
     pthread_spin_init(&spin, PTHREAD_PROCESS_PRIVATE);
+    pthread_barrier_init(&bp, NULL, 2);
 
     // Lock mutexes
     std::cout << "main: mutex_lock" << std::endl;
@@ -79,7 +97,10 @@ int main() {
 
 
     // Start pthreads
-    wait_fn_thread fn[THCNT]  = { wait_mutex_pthread, wait_spin_pthread, wait_rdlock_pthread, wait_rwlock_pthread };
+    wait_fn_thread fn[THCNT]  = {
+        wait_mutex_pthread, wait_spin_pthread, wait_rdlock_pthread,
+        wait_rwlock_pthread, wait_cond_pthread, wait_barrier_pthread
+    };
     pthread_t thread_ids[THCNT];
 
     for (int i = 0; i < THCNT; i++) {
@@ -89,7 +110,7 @@ int main() {
         }
     }
 
-    std::cout << "main: sleep(10)" << std::endl;
+    std::cout << std::endl << "main: sleep(10)" << std::endl << std::endl;
     sleep(10);
 
     // UnLock mutexes
@@ -99,6 +120,8 @@ int main() {
     pthread_spin_unlock(&spin);
     std::cout << "main: wr_unlock" << std::endl;
     pthread_rwlock_unlock(&rwlock);
+    pthread_cond_signal(&cond);
+    pthread_barrier_wait(&bp);
 
     // Join pthreads
     for (int i = 0; i < THCNT; i++) {
