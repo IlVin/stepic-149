@@ -21,6 +21,17 @@ struct TOK {
         // <base> ::= <var> | <number> | ( <expression> )    //
         ///////////////////////////////////////////////////////
 
+        ///////////////////////////////////////////////////////////////////////
+        // <expression> ::= <first term> [ <addop> <term> ]*                 //
+        // <first term> ::= <first factor> <rest>                            //
+        // <term> ::= <factor> <rest>                                        //
+        // <rest> ::= [ <mulop> <factor> ]*                                  //
+        // <first factor> ::= [ <addop> ] <factor>                           //
+        // <factor> ::= <number> | <var> [^ <number>]* | ( <expression> )    //
+        ///////////////////////////////////////////////////////////////////////
+
+
+
 class ExParser {
     private:
         vector<TOK> toks;
@@ -53,16 +64,15 @@ class ExParser {
             return flag;
         }
 
+        // <factor> ::= <number> | <var> [^ <number>]* | ( <expression> )    //
         bool factor() {
-            if (base()) {
-                if (op('^') && factor()) return true;
-            } else return false;
-            return true;
-        }
+            if (number()) return true;
+            if (var()) {
+                if(op('^') && number()) return true;
+                else return true;
+            }
 
-        bool base() {
-            std::cout << "base" << std::endl;
-            return var() || number() || (rbr_l() && expression() && rbr_r());
+            return rbr_l() && expression() && rbr_r();
         }
 
         bool first_factor() {
