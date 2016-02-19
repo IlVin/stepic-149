@@ -1,4 +1,3 @@
 PROJECT (final)
 
-##### TagsBoard library #####
-# ADD_LIBRARY (TAGSNODE STATIC TagsNode.cpp)
+ADD_LIBRARY (tserver STATIC tserver.cpp)
