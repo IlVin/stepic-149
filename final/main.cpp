@@ -12,6 +12,8 @@
 
 #define OPTSTRING "h:p:d:"
 
+// PROTOTYPE: http://www.skitoy.com/p/writing-an-echo-server-in-libev-and-c/375
+
 int main(int argc, char *argv[]) {
 
     std::string host = "localhost", port = "33333", folder = ".";
@@ -34,7 +36,7 @@ int main(int argc, char *argv[]) {
     }
 
     std::cout << "HOST: " << host << "; PORT: " << port << "; FOLDER: " << folder << std::endl;
-
+/*
     // Create child process
     pid_t process_id = fork();
 
@@ -60,17 +62,18 @@ int main(int argc, char *argv[]) {
     if(sid < 0) {
         exit(1);
     }
-
+*/
     // Change the current working directory to folder.
     chdir(folder.c_str());
-
+/*
     // Close stdin. stdout and stderr
     close(STDIN_FILENO);
     close(STDOUT_FILENO);
     close(STDERR_FILENO);
-
+*/
     TServer * srv = new TServer(host, port, folder);
     srv->start();
+    delete srv;
 
     return 0;
 }
