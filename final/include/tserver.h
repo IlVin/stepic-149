@@ -81,9 +81,9 @@ public:
 
     static void io_accept_cb(struct ev_loop *loop, struct ev_io *w, int revent) {
         std::cout << "IO_ACCEPT_CB: " << revent << std::endl;
-        int client_sd = accept(w->fd, 0, 0);
+        int client_sd = accept(w->fd, NULL, NULL);
         ctx(w)->srv->gc_handlers();
-        ctx(w)->srv->handlers.push_back(new HTTPHandler(client_sd));
+        ctx(w)->srv->handlers.push_back(new HTTPHandler(loop, client_sd, ctx(w)->srv->folder));
     }
 
 

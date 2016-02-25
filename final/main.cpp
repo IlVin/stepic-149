@@ -16,7 +16,7 @@
 
 int main(int argc, char *argv[]) {
 
-    std::string host = "localhost", port = "33333", folder = ".";
+    std::string host = "localhost", port = "33334", folder = ".";
 
     // Read options
     int opt = getopt( argc, argv, OPTSTRING );
