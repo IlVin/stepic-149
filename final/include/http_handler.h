@@ -79,7 +79,6 @@ class HTTPHandler {
 
         static void r_cb(struct ev_loop *loop, struct ev_io *w, int revent) {
             ev_io_stop(loop, w);
-            std::cout << "R_CB: " << revent << std::endl;
             TBuffer *rb = ioctx(w)->h->rb;
             TBuffer *wb = ioctx(w)->h->wb;
             int r = rb->rcv(w->fd, 1024);
@@ -88,10 +87,8 @@ class HTTPHandler {
                 char ** p = rb->head();
 
                 // No multithreading
-                std::cout << "BUF: [" << rb->asString() << "]" << std::endl;
                 if (strstr(*p, "\n\n") != nullptr || strstr(*p, "\n\r\n") != nullptr) {
                     ev_io_stop(loop, w);
-                    std::cout << "IN HTTP REQUEST IS COMPLETE" << std::endl;
                     TCGI * cgi = new TCGI(ioctx(w)->h->folder);
                     cgi->start(rb, wb);
                     delete cgi;

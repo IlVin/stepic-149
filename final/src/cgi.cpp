@@ -13,11 +13,9 @@ std::string t404 = "HTTP/1.0 404 NOT FOUND\r\nContent-Type: text/html\r\n\r\n";
 
 void TCGI::bad_request() {
     wb->append(tbad);
-    std::cout << "BAD_REQUEST" << std::endl;
 }
 
 void TCGI::start(TBuffer * rb_, TBuffer * wb_) {
-    std::cout << "TCGI::START" << std::endl;
     rb = rb_;
     wb = wb_;
     r = new TRequest(rb);
@@ -25,8 +23,6 @@ void TCGI::start(TBuffer * rb_, TBuffer * wb_) {
         bad_request();
     } else {
         std::string path = r->path;
-        std::cout << "PATH: " << path << std::endl;
-        std::cout << "FOLDER: " << folder << std::endl;
         std::string fpath = folder + path;
 
         std::ifstream * f = new std::ifstream(fpath, std::ios::in );

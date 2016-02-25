@@ -74,13 +74,11 @@ public:
     void gc_handlers();
 
     static void sig_cb(struct ev_loop *loop, struct ev_signal *w, int revent) {
-        std::cout << "SIG_CB: " << revent << std::endl;
         ev_signal_stop(ctx(w)->srv->loop, w);
         ev_unloop(ctx(w)->srv->loop, EVUNLOOP_ALL);
     }
 
     static void io_accept_cb(struct ev_loop *loop, struct ev_io *w, int revent) {
-        std::cout << "IO_ACCEPT_CB: " << revent << std::endl;
         int client_sd = accept(w->fd, NULL, NULL);
         ctx(w)->srv->gc_handlers();
         ctx(w)->srv->handlers.push_back(new HTTPHandler(loop, client_sd, ctx(w)->srv->folder));

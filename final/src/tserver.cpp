@@ -45,14 +45,12 @@ void TServer::start() {
 };
 
 void TServer::close_handlers() {
-    std::cout << "CLOSE_HANDLERS!!!" << std::endl;
     for (std::list<HTTPHandler *>::iterator it = handlers.begin(); it != handlers.end(); it++) {
         delete *it;
     }
 }
 
 void TServer::gc_handlers() {
-    std::cout << "GC_HANDLERS" << std::endl;
     for (std::list<HTTPHandler *>::iterator it = handlers.begin(); it != handlers.end(); it++) {
         if ((*it)->is_finished) {
             std::cout << "HTTP is finished !!!" << std::endl;

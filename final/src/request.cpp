@@ -55,12 +55,10 @@ bool TRequest::parse(){
             if (!is(&p, ' ')) return false;
         } else if (is(&p, ' ')) {
             len = p - pth - 1;
-            std::cout << "IS(' ') [" << p << "] len=" << len << std::endl;
         } else {
             return false;
         }
         if(!is_token(&p, "HTTP")) return false;
-        std::cout << "IS_TOKEN('HTTP') [" << p << "] len=" << len << std::endl;
         path = new char[len+1];
         for (size_t i = 0; i < len; i++) {
             path[i] = pth[i];
